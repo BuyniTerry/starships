@@ -1,30 +1,23 @@
 import React from 'react';
 import './App.css';
-import {HashRouter as Router,Switch, Route, withRouter } from "react-router"
-import Ship from "./pages/starship/Ship";
-import ShipsList from "./pages/starships/ShipsList";
-import TestPage from "./pages/testPage/TestPage"
-import {Header} from "./components/header";
-import {useSelector} from "react-redux";
+import { Route } from "react-router-dom"
+import StarShipsList from "./components/StarShipsList";
+import Ship from "./components/Ship";
 
-function App(history) {
-    const counter = useSelector(data => data);
+function App() {
   return (
    <>
-     <Header />
-     <Switch>
-       <Route path="/test-page">
-          <TestPage />
+       <Route exact path="/">
+           <StarShipsList />
        </Route>
-       <Route exact path="/ships/page=:counter">
-           <ShipsList totalPages={4} pageNumber={counter} />
+       <Route  path="/ship/:shipName">
+           <Ship />
        </Route>
-        <Route path="/ships/:url" >
-            <Ship history={history} />
-        </Route>
-     </Switch>
+       <Route  path="/ship/?search=:name">
+           <Ship />
+       </Route>
    </>
   );
 }
 
-export default withRouter(App);
+export default App;
