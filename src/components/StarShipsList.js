@@ -1,26 +1,30 @@
 import React, {useState, useEffect} from 'react';
 import { connect } from "react-redux";
 import queryString from 'query-string';
-import { getAll, findOne } from "../store/actions";
-import {Link, useHistory } from "react-router-dom";
+import {getAll, findOne, getOne} from "../store/actions";
+import {Link, Route, Switch, useHistory, useRouteMatch} from "react-router-dom";
 import Pagination from "./Pagination";
+import Ship from "./Ship";
 
 const StarShipsList = props => {
     const history = useHistory();
-    const { getStarships, ships, findShip } = props;
+    let { path } = useRouteMatch();
+    const matchID = (url) => url.match(/[0-9]+/);
+    const { getStarships, ships, findShip, getOne } = props;
     const [value, setValue] = useState('');
-    const getReformatShipsList = `undefined` !== typeof ships && Object.values(ships.results);
+    const getReformatShipsList = `undefined` !== typeof ships && ships && Object.values(ships.results);
     const filter = getReformatShipsList && getReformatShipsList.filter( ship => ship.name.toLowerCase().includes(value));
     const handlePageChange = ({ selected }) => {
         getStarships(`${selected + 1}`);
         history.push(`?page=${selected + 1}`)
     };
     const paramsString = window.location.search;
-
     useEffect(() => {
         const pageParams = new URLSearchParams(paramsString).get('page');
         const searchParams = new URLSearchParams(paramsString).get('search');
-        getStarships(pageParams && pageParams);
+        if (pageParams) {
+            getStarships(pageParams);
+        }
         findShip(searchParams);
         return undefined
     },[]);
@@ -40,14 +44,17 @@ const StarShipsList = props => {
                 ))}
             </ul>
             <ul>
-                {getReformatShipsList && getReformatShipsList.map(({name}) =>
-                    <li key={name}>
-                        <Link to={`/ship/${name}`}>
-                            {name}
-                        </Link>
-                    </li>
+                {getReformatShipsList && getReformatShipsList.map(({name, url}) =>
+                    <>
+                        <li key={name}>
+                            <Link to={`/${name}/${matchID(url)}`} onClick={() => getOne(matchID(url))}>
+                                {name}
+                            </Link>
+                        </li>
+                    </>
                 )}
             </ul>
+
             {ships &&
             <Pagination
                 pageCount={ships && Math.ceil(ships.count/10 )}
@@ -58,6 +65,14 @@ const StarShipsList = props => {
                 })()}
                 onPageChange={handlePageChange}
             />}
+            <Switch>
+                <Route path={`${path}:shipName/:id`}>
+                    <Ship />
+                </Route>
+                <Route  path={`${path}?search=:name`}>
+                    <Ship />
+                </Route>
+            </Switch>
         </div>
     );
 };
@@ -66,6 +81,7 @@ const mapStateToProps = ( {getStarships} ) => ({
 });
 const mapDispatchToProps = dispatch => ({
     getStarships: (val) => dispatch(getAll(val)),
+    getOne: (val) => dispatch(getOne(val)),
     findShip: (val) => dispatch(findOne(val))
 });
 export default connect(mapStateToProps,mapDispatchToProps)(StarShipsList);

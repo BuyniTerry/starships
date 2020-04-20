@@ -7,6 +7,9 @@ import {
     SEARCH_STARSHIP_DATA,
     SEARCH_STARSHIP_DATA_SUCCESS,
     SEARCH_STARSHIP_DATA_FAIL,
+    GET_ONE_STARSHIPS_DATA,
+    GET_ONE_STARSHIPS_DATA_SUCCESS,
+    GET_ONE_STARSHIPS_DATA_FAIL,
 } from "../actionTypes";
 const INITIAL_URL = 'https://swapi.dev/api/';
 
@@ -20,6 +23,21 @@ function* getAllShipsData({payload}) {
     } catch (error) {
         yield put({
             type: GET_ALL_STARSHIPS_DATA_FAIL,
+            payload: { ...error }
+        });
+        console.log(error)
+    }
+}
+function* getOneShipData({payload}) {
+    try {
+        const response = yield axios.get(`${INITIAL_URL}starships/${payload}`);
+        yield put({
+            type: GET_ONE_STARSHIPS_DATA_SUCCESS,
+            payload: { ...response }
+        });
+    } catch (error) {
+        yield put({
+            type: GET_ONE_STARSHIPS_DATA_FAIL,
             payload: { ...error }
         });
         console.log(error)
@@ -43,5 +61,6 @@ function* searchShip({payload}) {
 
 export default function* watchStarShips() {
     yield takeEvery(GET_ALL_STARSHIPS_DATA, getAllShipsData);
+    yield takeEvery(GET_ONE_STARSHIPS_DATA, getOneShipData);
     yield takeEvery(SEARCH_STARSHIP_DATA, searchShip)
 }

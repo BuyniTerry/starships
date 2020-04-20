@@ -4,7 +4,7 @@ const Pagination = props => {
     const { pageCount } = props;
     if (!pageCount || pageCount === 1) return null;
     return (
-        <div className="w-100 d-flex justify-content-center align-items-center">
+        <div className="d-flex justify-content-left align-items-center">
             <ReactPaginate
                 pageCount={pageCount}
                 breakClassName="page-item"

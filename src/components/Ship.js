@@ -1,15 +1,41 @@
-import React from 'react';
+import React, {useEffect} from 'react';
 import {useParams} from "react-router-dom";
+import startCase from 'lodash/startCase'
+import {connect} from "react-redux";
+import {getOne} from "../store/actions";
+
 
 const Ship = props => {
-    let { shipName, name } = useParams();
-    console.log(name);
+    const { ship, getOne } = props;
+    const { id } = useParams();
+    useEffect(() => {
+        getOne(id);
+        return undefined
+    },[]);
     return (
-        <div>
-            <h1>SHIP-page</h1>
-            {shipName}
-        </div>
+        <>
+            {
+                ship && (
+                    <div>
+                        <ul>
+                            {ship.name}
+                            {
+                                Object.entries(ship).map( prop =>
+                                    <li>{startCase(prop[0])}: {prop[1]}</li>
+                                 )
+                            }
+                        </ul>
+
+                    </div>
+                )
+            }
+        </>
     );
 };
-
-export default Ship;
+const mapStateToProps = ( {getStarships} ) => ({
+    ...getStarships,
+});
+const mapDispatchToProps = dispatch => ({
+    getOne: (v) => dispatch(getOne(v)),
+});
+export default connect(mapStateToProps,mapDispatchToProps)(Ship);

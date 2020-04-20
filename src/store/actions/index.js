@@ -1,1 +1,1 @@
-export { getAll, findOne } from './starship'
+export { getAll, findOne, getOne } from './starship'
