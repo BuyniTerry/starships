@@ -20,9 +20,6 @@ const store = createStore(
 const ReduxProvider = props => {
     const { children } = props;
     sagaMiddleware.run(rootSaga);
-    // useEffect(() => {
-    //     sagaMiddleware.run(rootSaga)
-    // }, [rootSaga]);
     return (
         <Provider store={store}>{children}</Provider>
     );

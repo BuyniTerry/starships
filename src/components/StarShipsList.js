@@ -5,33 +5,41 @@ import {getAll, findOne, getOne} from "../store/actions";
 import {Link, Route, Switch, useHistory, useRouteMatch} from "react-router-dom";
 import Pagination from "./Pagination";
 import Ship from "./Ship";
+import Spinner from "react-bootstrap/Spinner";
 
 const StarShipsList = props => {
+    const { getStarships, ships, findShip, getOne, loading } = props;
     const history = useHistory();
     let { path } = useRouteMatch();
-    const matchID = (url) => url.match(/[0-9]+/);
-    const { getStarships, ships, findShip, getOne } = props;
     const [value, setValue] = useState('');
-    const getReformatShipsList = `undefined` !== typeof ships && ships && Object.values(ships.results);
-    const filter = getReformatShipsList && getReformatShipsList.filter( ship => ship.name.toLowerCase().includes(value));
-    const handlePageChange = ({ selected }) => {
-        getStarships(`${selected + 1}`);
-        history.push(`?page=${selected + 1}`)
-    };
-    const paramsString = window.location.search;
     useEffect(() => {
+        const paramsString = window.location.search;
         const pageParams = new URLSearchParams(paramsString).get('page');
         const searchParams = new URLSearchParams(paramsString).get('search');
         if (pageParams) {
             getStarships(pageParams);
         }
-        findShip(searchParams);
+        if (searchParams) {
+            findShip(searchParams);
+        }
         return undefined
     },[]);
+    // get array
+    const getReformatShipsList = `undefined` !== typeof ships && ships && Object.values(ships.results);
+    // filter ships
+    const filter = getReformatShipsList && getReformatShipsList.filter( ship => ship.name.toLowerCase().includes(value));
+    // get ship id
+    const matchID = (url) => url.match(/[0-9]+/);
+    // handles
+    const handlePageChange = ({ selected }) => {
+        getStarships(`${selected + 1}`);
+        history.push(`?page=${selected + 1}`)
+    };
     const handleSearching = () => {
         findShip(value);
         history.push(`?search=${value}`)
     };
+
     return (
         <div>
             <h1>StarShipsList</h1>
@@ -43,18 +51,19 @@ const StarShipsList = props => {
                     <p key={item.name}>{item.name}</p>
                 ))}
             </ul>
-            <ul>
-                {getReformatShipsList && getReformatShipsList.map(({name, url}) =>
-                    <>
-                        <li key={name}>
-                            <Link to={`/${name}/${matchID(url)}`} onClick={() => getOne(matchID(url))}>
-                                {name}
-                            </Link>
-                        </li>
-                    </>
-                )}
-            </ul>
-
+            {loading ? <Spinner animation='border' /> :
+                <ul>
+                    {getReformatShipsList && getReformatShipsList.map(({name, url}) =>
+                        <>
+                            <li key={name}>
+                                <Link to={`/${name}/${matchID(url)}`} onClick={() => getOne(matchID(url))}>
+                                  {name}
+                                </Link>
+                            </li>
+                        </>
+                        )}
+                </ul>
+            }
             {ships &&
             <Pagination
                 pageCount={ships && Math.ceil(ships.count/10 )}
