@@ -20,3 +20,62 @@
 .App-link {
   color: #09d3ac;
 }
+.logo {
+
+}
+.layer {
+  background: url(http://www.script-tutorials.com/demos/360/images/stars.png) top center #000;
+  position: fixed;
+  width: 100%;
+  height: 100%;
+  display: block;
+  top: 0;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  z-index: -1;
+}
+.sub_layer {
+  background: url(http://www.script-tutorials.com/demos/360/images/twinkling.png) top center;
+  animation: move-twink-back 200s linear infinite;
+  position: fixed;
+  width: 100%;
+  height: 100%;
+  display: block;
+  top: 0;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  z-index: -1;
+}
+.list_item {
+  color: darkorange;
+}
+.list_item span {
+  color: #ffffff;
+}
+.list_item a {
+  color: #ffffff;
+}
+.list_item a:hover {
+  color: darkorange;
+  text-underline: none;
+  text-decoration: none;
+  text-shadow: white 1px 1px 10px;
+}
+.list-group {
+  margin: 20px 0 !important;
+}
+.ship_title {
+  font-size: 30px;
+  color: #ffffff;
+  text-shadow: darkorange 5px 1px 10px;
+}
+@keyframes move-twink-back {
+  from {
+    background-position: 0 0;
+  }
+  to {
+    background-position: -10000px 5000px;
+  }
+}

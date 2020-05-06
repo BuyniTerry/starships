@@ -1,5 +1,6 @@
 import React from 'react';
 import ReactDOM from 'react-dom';
+import './fonts/Starjedi.ttf'
 import './index.css';
 import App from './App';
 import ReduxProvider from "./store/ReduxProvider";

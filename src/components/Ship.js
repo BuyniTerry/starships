@@ -11,13 +11,13 @@ const Ship = props => {
     useEffect(() => {
         getOne(id);
         return undefined
-    },[]);
+    },[getOne,id]);
     // filter
     const linkFilter = prop => {
-        return (<li key={prop[0]}>{startCase(prop[0])}:
-            <ul>
-                {typeof prop[1] === `object` && prop[1].map( link => <li key={link}><a href={link}>{link}</a></li>)}
-                {typeof prop[1] === `string` && <li key={prop[1]}><a href={prop[1]}>{prop[1]}</a></li>}
+        return (<li key={prop[0]} className="list_item"><span>{startCase(prop[0])}</span>:
+            <ul style={{listStyleType: 'none'}}>
+                {typeof prop[1] === `object` && prop[1].map( link => <li key={link} className="list_item"><a href={link}>{link}</a></li>)}
+                {typeof prop[1] === `string` && <li key={prop[1]} className="list_item"><a href={prop[1]}>{prop[1]}</a></li>}
             </ul>
         </li>);
     };
@@ -26,14 +26,14 @@ const Ship = props => {
             {
                 ship && (
                     <div>
-                        <ul>
-                            {ship.name}
+                        <ul className="list-group">
+                            <span className="ship_title">{ship.name}</span>
                             {
                                 Object.entries(ship).map( prop => {
                                     if (prop[0] === 'pilots') return linkFilter(prop);
                                     if (prop[0] === 'films') return linkFilter(prop);
                                     if (prop[0] === 'url') return linkFilter(prop);
-                                        return <li key={prop[0]}>{startCase(prop[0])}: {prop[1]}</li>
+                                    return <li key={prop[0]} className="list_item"><span>{startCase(prop[0])}</span>: {prop[1]}</li>
                                     }
                                  )
                             }
